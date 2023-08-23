@@ -1,5 +1,7 @@
 # Open-AI-ChatBot
 
+![ReactExpress ChatBot](./src/Assets/Images/OpenAI-ChatBot.jpg)
+
 ## Table of Contents
 - [Open-AI-ChatBot](#open-ai-chatbot)
   - [Table of Contents](#table-of-contents)
