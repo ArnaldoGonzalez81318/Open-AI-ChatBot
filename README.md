@@ -27,7 +27,7 @@
 
  ## Key Features:
 
-* ***OpenAI-Powered Conversations:*** The heart of the ReactExpress ChatBot lies in its ability to hold intelligent and context-aware conversations with users. Leveraging OpenAI's language models, the chatbot comprehends user input, generates insightful responses, and adapts its answers based on the ongoing conversation.
+* **OpenAI-Powered Conversations:** The heart of the ReactExpress ChatBot lies in its ability to hold intelligent and context-aware conversations with users. Leveraging OpenAI's language models, the chatbot comprehends user input, generates insightful responses, and adapts its answers based on the ongoing conversation.
 
 * **Real-time Interaction:** Built with React.js, the frontend of the application ensures a responsive and fluid user experience. As users type their messages, the chatbot instantly processes the input and produces coherent replies, giving the impression of interacting with a human interlocutor.
 
