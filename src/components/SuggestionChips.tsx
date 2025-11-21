@@ -17,12 +17,15 @@ export const SuggestionChips = ({ suggestions, onSelect, disabled = false }: Sug
           type="button"
           disabled={disabled}
           onClick={() => onSelect(suggestion)}
-          className="group inline-flex shrink-0 snap-center items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 pr-5 text-sm font-semibold text-white/70 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface hover:border-accent-secondary/60 hover:bg-accent-secondary/10 hover:text-white disabled:cursor-not-allowed disabled:border-white/5 disabled:bg-white/0 disabled:text-white/30"
+          className="group relative inline-flex shrink-0 snap-center items-center gap-3 overflow-hidden rounded-full border border-white/15 bg-linear-to-br from-white/[0.08] to-white/[0.04] px-4 py-2 pr-5 text-sm font-semibold text-white/70 shadow-panel backdrop-blur-sm transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface hover:-translate-y-0.5 hover:border-accent-secondary/60 hover:bg-linear-to-br hover:from-accent-secondary/20 hover:to-accent-secondary/10 hover:text-white hover:shadow-glow disabled:cursor-not-allowed disabled:border-white/5 disabled:bg-white/0 disabled:text-white/30 disabled:hover:translate-y-0"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/10 text-xs font-semibold uppercase tracking-[0.24em] text-white/65 transition group-hover:border-accent-secondary/50 group-hover:bg-accent-secondary/20 group-hover:text-white">
+          <span className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(88,166,255,0.3),transparent_70%)]" />
+          </span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] text-xs font-semibold uppercase tracking-[0.24em] text-white/65 shadow-panel backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:border-accent-secondary/50 group-hover:bg-linear-to-br group-hover:from-accent-secondary/30 group-hover:to-accent-secondary/20 group-hover:text-white group-hover:shadow-glow">
             {`${index + 1}`.padStart(2, '0')}
           </span>
-          <span className="text-left leading-snug">{suggestion}</span>
+          <span className="relative z-10 text-left leading-snug">{suggestion}</span>
         </button>
       ))}
     </div>
