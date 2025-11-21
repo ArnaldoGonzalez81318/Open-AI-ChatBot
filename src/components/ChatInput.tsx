@@ -53,9 +53,9 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
   return (
     <form
       onSubmit={handleSubmit}
-      className="group relative w-full overflow-hidden rounded-[2.25rem] border border-white/5 bg-white/5 p-5 shadow-panel backdrop-blur-xl transition-all duration-300 focus-within:border-white/10 focus-within:bg-white/10 focus-within:shadow-glow"
+      className="group relative w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-linear-to-br from-white/[0.08] to-white/[0.04] p-5 shadow-panel backdrop-blur-2xl transition-all duration-300 focus-within:border-white/20 focus-within:bg-linear-to-br focus-within:from-white/[0.12] focus-within:to-white/[0.08] focus-within:shadow-glow"
     >
-      <div className="pointer-events-none absolute inset-x-8 -top-14 h-28 rounded-full bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_65%)] opacity-0 transition-opacity duration-500 group-focus-within:opacity-80" />
+      <div className="pointer-events-none absolute inset-x-8 -top-16 h-32 rounded-full bg-[radial-gradient(circle_at_top,rgba(127,90,240,0.5),transparent_60%)] opacity-0 blur-xl transition-opacity duration-500 group-focus-within:opacity-100" />
       <div className="mb-3 flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/45">
         <span>Compose Message</span>
         <span>{hintText}</span>
@@ -73,7 +73,7 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
       />
       <div className="absolute bottom-5 right-5 flex items-center gap-3">
         <span
-          className={`flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/45 transition ${showHint ? 'opacity-100' : 'opacity-0 group-focus-within:opacity-100'}`}
+          className={`flex items-center gap-2 rounded-full border border-white/15 bg-linear-to-br from-white/[0.1] to-white/[0.05] px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel backdrop-blur-sm transition-all duration-300 ${showHint ? 'opacity-100' : 'opacity-0 group-focus-within:opacity-100'}`}
         >
           {isLoading ? <LoadingDots /> : <HintIcon />}
           {isLoading ? 'Working' : 'Press Enter'}
@@ -81,9 +81,14 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
         <button
           type="submit"
           disabled={disabled || !value.trim()}
-          className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-accent-primary via-accent-primary to-accent-secondary text-white shadow-lg ring-1 ring-white/20 transition hover:-translate-y-0.5 hover:shadow-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-40"
+          className="group/btn relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-accent-primary via-accent-primary to-accent-secondary text-white shadow-glow ring-1 ring-white/20 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-glow-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:scale-100"
         >
-          {isLoading ? <LoadingDots /> : <SendIcon />}
+          <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100">
+            <span className="absolute inset-0 animate-spin-slow bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.3),transparent_50%)]" />
+          </span>
+          <span className="relative z-10">
+            {isLoading ? <LoadingDots /> : <SendIcon />}
+          </span>
         </button>
       </div>
     </form>
