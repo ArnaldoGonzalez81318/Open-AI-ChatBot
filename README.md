@@ -33,7 +33,7 @@ Visit `http://localhost:5173` for the UI and keep the Express server running on 
 
 Create a `.env` file in the project root (never commit secrets):
 
-```
+```env
 OPENAI_API_KEY=your-key-here
 OPENAI_MODEL=gpt-4.1-mini
 EXPRESS_PORT=3001
