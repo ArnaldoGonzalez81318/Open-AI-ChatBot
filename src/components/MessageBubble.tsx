@@ -17,7 +17,7 @@ const formatTime = (value: string) => {
 };
 
 const AssistantGlyph = () => (
-  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/80 shadow-glow ring-1 ring-white/10">
+  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] text-white/80 shadow-glow backdrop-blur-sm ring-1 ring-white/10 transition-transform duration-300 hover:scale-110">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -36,7 +36,7 @@ const AssistantGlyph = () => (
 );
 
 const UserGlyph = () => (
-  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-accent-secondary/40 bg-accent-primary/20 text-accent-secondary">
+  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-accent-secondary/50 bg-linear-to-br from-accent-primary/30 to-accent-primary/20 text-accent-secondary shadow-glow backdrop-blur-sm transition-transform duration-300 hover:scale-110">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -64,8 +64,8 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
   const alignment = isUser ? 'items-end text-right' : 'items-start text-left';
 
   const bubbleClass = isUser
-    ? 'bg-gradient-to-br from-accent-primary/95 via-accent-primary to-accent-secondary text-slate-50 shadow-glow'
-    : 'bg-surface-elevated/95 text-slate-100 ring-1 ring-white/10 backdrop-blur-xl';
+    ? 'bg-linear-to-br from-accent-primary via-accent-primary to-accent-secondary text-slate-50 shadow-glow-strong border border-accent-primary/30'
+    : 'bg-linear-to-br from-surface-elevated to-surface-elevated-hover text-slate-100 ring-1 ring-white/15 backdrop-blur-2xl border border-white/10';
 
   const handleCopy = async () => {
     if (!navigator?.clipboard?.writeText) {
@@ -93,11 +93,11 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
           )}
         </div>
         <div
-          className={`group relative w-full overflow-hidden rounded-[1.9rem] px-6 py-5 shadow-panel transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow ${bubbleClass}`}
+          className={`group relative w-full overflow-hidden rounded-[1.9rem] px-6 py-5 shadow-panel transition-all duration-300 hover:-translate-y-1 hover:shadow-glow ${bubbleClass}`}
         >
-          <span className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition duration-500 group-hover:opacity-100">
-            <span className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_65%)]" />
-            <span className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_bottom,_rgba(88,166,255,0.18),_transparent_65%)]" />
+          <span className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            <span className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top,rgba(127,90,240,0.25),transparent_60%)]" />
+            <span className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_bottom,rgba(88,166,255,0.2),transparent_60%)]" />
           </span>
           <p className="whitespace-pre-line text-sm leading-relaxed">
             {message.content}
@@ -106,7 +106,7 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             type="button"
             aria-label="Copy message"
             onClick={handleCopy}
-            className={`absolute ${isUser ? '-left-5' : '-right-5'} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/10 bg-white/10 p-2 text-white/70 shadow-lg transition group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:bg-white/20 hover:text-white`}
+            className={`absolute ${isUser ? '-left-5' : '-right-5'} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] p-2.5 text-white/70 shadow-glow backdrop-blur-sm transition-all duration-300 group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:scale-110 hover:border-white/25 hover:bg-white/20 hover:text-white hover:shadow-glow-strong`}
           >
             {copied ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -134,7 +134,7 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             )}
           </button>
           {copied && (
-            <span className={`absolute ${isUser ? 'right-6' : 'left-6'} -top-3 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/70 shadow-panel`}>Copied</span>
+            <span className={`absolute ${isUser ? 'right-6' : 'left-6'} -top-3 animate-slide-up-fade rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/80 shadow-glow backdrop-blur-sm`}>Copied</span>
           )}
         </div>
       </div>
