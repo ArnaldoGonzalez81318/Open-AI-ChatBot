@@ -53,7 +53,7 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
   return (
     <form
       onSubmit={handleSubmit}
-      className="group relative w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-linear-to-br from-white/[0.08] to-white/[0.04] p-5 shadow-panel backdrop-blur-2xl transition-all duration-300 focus-within:border-white/20 focus-within:bg-linear-to-br focus-within:from-white/[0.12] focus-within:to-white/[0.08] focus-within:shadow-glow"
+      className="group relative w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-linear-to-br from-white/8 to-white/4 p-5 shadow-panel backdrop-blur-2xl transition-all duration-300 focus-within:border-white/20 focus-within:bg-linear-to-br focus-within:from-white/12 focus-within:to-white/8 focus-within:shadow-glow"
     >
       <div className="pointer-events-none absolute inset-x-8 -top-16 h-32 rounded-full bg-[radial-gradient(circle_at_top,rgba(127,90,240,0.5),transparent_60%)] opacity-0 blur-xl transition-opacity duration-500 group-focus-within:opacity-100" />
       <div className="mb-3 flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/45">
@@ -69,11 +69,11 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
         rows={1}
-        className="max-h-52 min-h-[3.25rem] w-full resize-none bg-transparent pr-32 text-base leading-relaxed text-slate-100 placeholder:text-slate-400 focus:outline-none"
+        className="max-h-52 min-h-13 w-full resize-none bg-transparent pr-32 text-base leading-relaxed text-slate-100 placeholder:text-slate-400 focus:outline-none"
       />
       <div className="absolute bottom-5 right-5 flex items-center gap-3">
         <span
-          className={`flex items-center gap-2 rounded-full border border-white/15 bg-linear-to-br from-white/[0.1] to-white/[0.05] px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel backdrop-blur-sm transition-all duration-300 ${showHint ? 'opacity-100' : 'opacity-0 group-focus-within:opacity-100'}`}
+          className={`flex items-center gap-2 rounded-full border border-white/15 bg-linear-to-br from-white/10 to-white/5 px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel backdrop-blur-sm transition-all duration-300 ${showHint ? 'opacity-100' : 'opacity-0 group-focus-within:opacity-100'}`}
         >
           {isLoading ? <LoadingDots /> : <HintIcon />}
           {isLoading ? 'Working' : 'Press Enter'}
