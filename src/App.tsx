@@ -1,376 +1,376 @@
+import type { FormEvent } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import heroImage from './Assets/Images/OpenAI-ChatBot.jpg';
-import { ChatInput } from './components/ChatInput';
-import { MessageBubble } from './components/MessageBubble';
-import { SuggestionChips } from './components/SuggestionChips';
 import { useChatApi } from './hooks/useChatApi';
 
-const formatClock = (value?: string) => {
-  if (!value) {
-    return '—';
-  }
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(value));
-  } catch (error) {
-    return '—';
-  }
-};
+const defaultCodeSnippet = `import pandas as pd  # widely_used_library_for_data_and_csv_file_processing
 
-const suggestionSeeds = [
-  'Summarize the latest support conversations and list recurring themes.',
-  'Draft a friendly release note for our next feature rollout.',
-  'Generate onboarding tips for new teammates joining the AI squad.',
-  'Explain how this chatbot can improve customer satisfaction metrics.'
+def preview_csv(file_path_parameter_that_points_to_a_specific_csv_document):
+    df = pd.read_csv(file_path_parameter_that_points_to_a_specific_csv_document)
+    print("Displaying the first structured five rows from the given dataset now")
+    print(df.head())
+    print("Verify that dataset contains necessary columns and correctly formatted values")
+
+    print("Preview completed successfully for the provided CSV file input data")
+
+preview_csv("data.csv_example_input_for_demonstration_purposes_in_this_context")`;
+
+const tabs = ['c++', 'java', 'python'];
+const seedLogs = [
+  'Prepare NDA document',
+  'Generating a Python Script to preview CSV files',
+  'Troubleshoot CORS policy error',
+  'Explain Transformer architecture',
+  'Compare Python vs Go For Data Pipelines',
+  'Create daily stand-up summary',
+  'How does machine learning differ',
+  'Draft email to client about project',
+  'Ideas for push notifications campaign',
+  'Summarize this 40-page PDF',
+  'Transcribe and clean up this audio'
 ];
 
-const EmptyState = ({ onSelect }: { onSelect: (value: string) => void }) => (
-  <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-6 overflow-hidden rounded-[2.5rem] border border-white/5 bg-white/5 px-10 py-12 text-center text-slate-200 shadow-panel backdrop-blur-2xl">
-    <div className="absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.55),_transparent_70%)]" />
-    <div className="absolute inset-0 -z-10 animate-[float-slow_12s_ease-in-out_infinite] bg-[radial-gradient(circle_at_top_right,_rgba(86,233,255,0.35),_transparent_55%)]" />
-    <div className="relative flex flex-col items-center gap-4">
-      <div className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/70">
-        Enhanced AI Workspace
-      </div>
-      <h2 className="max-w-xl text-balance text-3xl font-semibold text-white sm:text-4xl">
-        Your ideas, guided by an AI partner
-      </h2>
-      <p className="max-w-xl text-sm leading-relaxed text-white/60">
-        Kick things off with a curated prompt or describe the insight you need. The assistant keeps the full context of your conversation, so every answer adapts to your goals.
-      </p>
-      <SuggestionChips suggestions={suggestionSeeds} onSelect={onSelect} />
-    </div>
-  </div>
-);
-
-const LoadingMessage = () => (
-  <div className="flex w-full justify-start">
-    <div className="relative flex max-w-[min(88%,38rem)] flex-col gap-3 rounded-3xl bg-surface-elevated/95 px-5 py-4 text-sm text-white/80 shadow-panel ring-1 ring-white/10 animate-slide-up-fade">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/45">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 shadow-glow ring-1 ring-white/10">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 4v6l3 3" />
-          </svg>
-        </span>
-        Assistant
-      </div>
-      <div className="flex items-center gap-3 text-white/60">
-        <span className="relative inline-flex h-2.5 w-10 overflow-hidden rounded-full bg-white/15">
-          <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-        </span>
-        Thinking…
-      </div>
-    </div>
-  </div>
-);
-
-const ErrorBanner = ({ message }: { message: string }) => (
-  <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-    {message}
-  </div>
-);
+const bubbleBase = 'w-fit max-w-[min(70%,38rem)] rounded-3xl px-5 py-3 text-[0.95rem] leading-relaxed shadow-sm transition-all duration-300';
+const quickActions = [
+  'Draft a product launch announcement',
+  'Explain transformers to a beginner',
+  'Generate integration test cases',
+  'Summarize meeting notes',
+  'Create a migration checklist'
+];
+const knowledgeCards = [
+  { title: 'API Reference', detail: 'Latest GPT endpoints, rate limits, and pricing tiers.' },
+  { title: 'Brand Voice', detail: 'Tone guidelines, vocabulary, and compliance reminders.' },
+  { title: 'Context Window', detail: 'You can include up to 128K tokens in extended mode.' }
+];
 
 function App() {
-  const { messages, sendMessage, isLoading, error, resetConversation } = useChatApi();
-  const endRef = useRef<HTMLDivElement | null>(null);
+  const { messages, sendMessage, isLoading, error } = useChatApi();
+  const [input, setInput] = useState('');
+  const [activeTab, setActiveTab] = useState('python');
+  const [selectedLog, setSelectedLog] = useState(1);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [showScrollToLatest, setShowScrollToLatest] = useState(false);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages.length, isLoading]);
+  const totalMessages = messages.length;
+  const userMessages = messages.filter((item) => item.role === 'user');
+  const assistantMessages = messages.filter((item) => item.role === 'assistant');
 
   useEffect(() => {
     const node = scrollRef.current;
     if (!node) {
-      setShowScrollToLatest(false);
       return;
     }
+    node.scrollTop = node.scrollHeight;
+  }, [messages, isLoading]);
 
-    const handleScroll = () => {
-      const threshold = 120;
-      const distanceFromBottom = node.scrollHeight - node.scrollTop - node.clientHeight;
-      const atBottom = distanceFromBottom < threshold;
-      setShowScrollToLatest(!atBottom);
-    };
-
-    handleScroll();
-    node.addEventListener('scroll', handleScroll);
-
-    return () => {
-      node.removeEventListener('scroll', handleScroll);
-    };
-  }, [messages.length, isLoading]);
-
-  const conversationStats = useMemo(() => {
-    const totalTurns = messages.length;
-    const userTurns = messages.filter((item) => item.role === 'user').length;
-    const assistantTurns = messages.filter((item) => item.role === 'assistant').length;
-
-    return {
-      totalTurns,
-      userTurns,
-      assistantTurns,
-      metrics: [
-        { label: 'Total turns', value: totalTurns },
-        { label: 'You', value: userTurns },
-        { label: 'Assistant', value: assistantTurns }
-      ]
-    };
-  }, [messages]);
-
-  const metrics = conversationStats.metrics;
-
-  const assistantState = useMemo(() => {
-    if (isLoading) {
-      return {
-        label: 'Generating response',
-        helper: 'The assistant is crafting a reply for you.',
-        badgeClass: 'border-accent-secondary/40 bg-accent-secondary/10 text-accent-secondary',
-        dotClass: 'bg-accent-secondary animate-pulse-soft'
-      };
+  const handleSubmit = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || isLoading) {
+      return;
     }
-
-    if (error) {
-      return {
-        label: 'Needs attention',
-        helper: error,
-        badgeClass: 'border-red-400/40 bg-red-500/20 text-red-100',
-        dotClass: 'bg-red-400 animate-pulse-soft'
-      };
-    }
-
-    if (conversationStats.totalTurns > 0) {
-      return {
-        label: 'Ready for follow-ups',
-        helper: 'Context synced from this session.',
-        badgeClass: 'border-emerald-400/40 bg-emerald-500/10 text-emerald-100',
-        dotClass: 'bg-emerald-300'
-      };
-    }
-
-    return {
-      label: 'Standing by',
-      helper: 'Select a suggestion or write a custom prompt to get started.',
-      badgeClass: 'border-white/10 bg-white/10 text-white/70',
-      dotClass: 'bg-white/70'
-    };
-  }, [conversationStats.totalTurns, error, isLoading]);
-
-  const insightPills = useMemo(() => {
-    const total = conversationStats.totalTurns;
-    const assistantShare = total > 0 ? Math.round((conversationStats.assistantTurns / total) * 100) : 0;
-    const userShare = total > 0 ? Math.round((conversationStats.userTurns / total) * 100) : 0;
-    const lastMessage = total > 0 ? messages[messages.length - 1] : null;
-
-    return [
-      {
-        label: 'Conversation depth',
-        value: total > 0 ? `${total} msgs` : 'No history',
-        caption: total > 0 ? `${userShare}% prompts from you` : 'Start with a suggestion to move faster.'
-      },
-      {
-        label: 'Assistant coverage',
-        value: total > 0 ? `${assistantShare}%` : '—',
-        caption: total > 0 ? 'Share of assistant responses' : 'Awaiting the first reply.'
-      },
-      {
-        label: 'Last activity',
-        value: formatClock(lastMessage?.createdAt),
-        caption: isLoading ? 'Working on a new answer.' : total > 0 ? 'Context locked and ready.' : 'Idle until you ask something.'
-      }
-    ];
-  }, [conversationStats, isLoading, messages]);
-
-  const handleSuggestion = (value: string) => {
-    void sendMessage(value);
+    setInput('');
+    await sendMessage(trimmed);
   };
 
-  const handleScrollToLatest = () => {
-    const node = scrollRef.current;
-    if (!node) {
-      return;
+  const assistantPreview = useMemo(() => {
+    const latestAssistant = [...messages].reverse().find((item) => item.role === 'assistant');
+    return latestAssistant?.content ?? defaultCodeSnippet;
+  }, [messages]);
+
+  const conversationLogs = useMemo(() => {
+    const userPrompts = messages.filter((item) => item.role === 'user').map((item) => item.content.trim());
+    if (!userPrompts.length) {
+      return seedLogs;
     }
-    node.scrollTo({ top: node.scrollHeight, behavior: 'smooth' });
-    setShowScrollToLatest(false);
+    return [...new Set([...userPrompts.slice(-seedLogs.length), ...seedLogs])].slice(0, seedLogs.length);
+  }, [messages]);
+
+  const stats = useMemo(
+    () => [
+      { label: 'Messages', value: totalMessages.toString() },
+      { label: 'User prompts', value: userMessages.length.toString() },
+      {
+        label: 'Assistant replies',
+        value: assistantMessages.length ? assistantMessages.length.toString() : '0'
+      }
+    ],
+    [assistantMessages.length, totalMessages, userMessages.length]
+  );
+
+  const conversationStatus = useMemo(() => {
+    if (isLoading) {
+      return 'Assistant is composing a response.';
+    }
+    if (!messages.length) {
+      return 'Start a new conversation or load a saved log to begin collaborating.';
+    }
+    return 'Ready for your next prompt.';
+  }, [isLoading, messages.length]);
+
+  const highlightedLog = useMemo(() => {
+    if (selectedLog < 0 || selectedLog >= conversationLogs.length) {
+      return undefined;
+    }
+    return conversationLogs[selectedLog];
+  }, [conversationLogs, selectedLog]);
+
+  const interactionsLabel = messages.length ? `${messages.length} interactions` : 'No history yet';
+
+  const visibleLogs = useMemo(() => conversationLogs.slice(0, 6), [conversationLogs]);
+
+  const backgroundStyle = { backgroundImage: `url(${heroImage})` };
+
+  const handleQuickAction = (prompt: string) => {
+    setInput(prompt);
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-hidden text-slate-100 lg:flex-row">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(86,233,255,0.14),_transparent_55%)]" />
-      <aside className="relative hidden w-full max-w-sm flex-col border-r border-white/5 bg-white/5 px-9 py-12 shadow-panel backdrop-blur-3xl lg:flex">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.14),_transparent_65%)]" />
-        <div className="relative z-10 flex flex-1 flex-col gap-12">
-          <div className="space-y-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-white/60">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-secondary" />
-              Control Room
+    <div className="relative min-h-screen w-full overflow-hidden bg-slate-950 text-slate-100">
+      <div className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-20" style={backgroundStyle} />
+      <div className="pointer-events-none absolute inset-0 bg-slate-950/92" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.35),transparent_65%)] opacity-70" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.28),transparent_65%)] opacity-60" />
+
+      <main className="relative mx-auto flex min-h-screen max-w-[1400px] flex-col gap-8 px-6 py-10 sm:px-8 lg:px-12">
+        <header className="flex flex-col justify-between gap-6 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.9)] backdrop-blur-2xl md:flex-row md:items-center">
+          <div className="space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Live session
             </span>
-            <h1 className="text-3xl font-semibold text-white">
-              Open AI Chatbot
-            </h1>
-            <p className="text-sm leading-relaxed text-white/60">
-              A refreshed interface built with React, Vite, Tailwind, and TypeScript to help you craft better conversations faster.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.32em] text-white/50">
-              Conversation metrics
-            </h2>
-            <div className="grid grid-cols-3 gap-4">
-              {metrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="rounded-2xl border border-white/10 bg-white/10 px-4 py-5 text-center shadow-panel"
-                >
-                  <dt className="text-[0.6rem] uppercase tracking-[0.28em] text-white/50">{metric.label}</dt>
-                  <dd className="mt-2 text-2xl font-semibold text-white">{metric.value}</dd>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.32em] text-white/50">
-              Quick ideas
-            </h2>
-            <SuggestionChips suggestions={suggestionSeeds} onSelect={handleSuggestion} disabled={isLoading} />
-          </div>
-
-          <div className="mt-auto overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 shadow-panel">
-            <img
-              src={heroImage}
-              alt="Chatbot illustration"
-              className="h-full w-full object-cover object-center opacity-80"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </aside>
-
-      <main className="relative flex w-full flex-1 flex-col gap-8 px-4 py-10 sm:px-10 lg:px-14 lg:py-16">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-white/10 to-transparent" />
-        <nav className="relative flex flex-col gap-4 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-panel backdrop-blur-2xl sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-white/80 shadow-glow">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="h-5 w-5"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v6l4 2-4 2v6m0-6-4-2 4-2" />
-              </svg>
-            </span>
-            <div className="space-y-1">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/60">Workspace</p>
-              <p className="text-lg font-semibold text-white">Open AI Copilot Studio</p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 text-sm text-white/60 sm:items-end">
-            <div className="flex flex-wrap items-center gap-3 sm:justify-end">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/70">
-                Beta
-              </span>
-              <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.24em] ${assistantState.badgeClass}`}>
-                <span className={`h-2 w-2 rounded-full ${assistantState.dotClass}`} />
-                {assistantState.label}
-              </span>
-            </div>
-            <p className="text-xs text-white/50 sm:text-right">{assistantState.helper}</p>
-          </div>
-        </nav>
-        <header className="relative flex flex-col gap-5 overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/10 p-7 shadow-panel backdrop-blur-2xl">
-          <div className="absolute inset-y-0 right-12 hidden w-48 bg-[radial-gradient(circle,_rgba(86,233,255,0.18),_transparent_75%)] blur-3xl lg:block" />
-          <button
-            type="button"
-            onClick={resetConversation}
-            aria-label="Reset conversation"
-            className="absolute right-6 top-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/70 shadow-panel transition hover:border-red-400/40 hover:bg-red-500/20 hover:text-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300/80 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="h-4 w-4"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="m4 4 6 6m0 0 6 6M10 10l6-6M10 10 4 16" />
-            </svg>
-            <span className="sr-only">Reset conversation</span>
-          </button>
-          <div className="flex flex-col gap-4 pr-16 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/50">
-                Session overview
+            <div>
+              <h1 className="text-3xl font-semibold text-white sm:text-[2.1rem]">Aurora Chat Workspace</h1>
+              <p className="mt-2 max-w-2xl text-sm text-slate-400">
+                Focus on the conversation. Keep track of key prompts, review the latest assistant output, and ship answers faster with an uncluttered layout.
               </p>
-              <h2 className="max-w-2xl text-balance text-2xl font-semibold text-white sm:text-3xl">
-                Let’s explore what your assistant can build for you
-              </h2>
             </div>
           </div>
-          {suggestionSeeds.length > 0 && (
-            <SuggestionChips suggestions={suggestionSeeds} onSelect={handleSuggestion} disabled={isLoading} />
-          )}
-        </header>
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          {insightPills.map((item) => (
-            <div key={item.label} className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 shadow-panel backdrop-blur">
-              <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(127,90,240,0.22),_transparent_70%)] opacity-70" />
-              <div className="relative space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/50">{item.label}</p>
-                <p className="text-2xl font-semibold text-white">{item.value}</p>
-                <p className="text-xs text-white/60">{item.caption}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <section className="relative flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 shadow-panel backdrop-blur-2xl">
-          <div className="absolute inset-x-8 top-10 hidden h-32 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.22),_transparent_70%)] lg:block" />
-          <div className="relative flex-1 overflow-hidden">
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-surface via-surface/70 to-transparent" />
-            <div ref={scrollRef} className="flex h-full flex-col space-y-7 overflow-y-auto p-6 sm:p-10">
-              {messages.length > 0 && (
-                <div className="flex justify-center">
-                  <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel">
-                    <span className="h-px w-8 bg-white/15" />
-                    Conversation timeline · {conversationStats.totalTurns} {conversationStats.totalTurns === 1 ? 'message' : 'messages'}
-                    <span className="h-px w-8 bg-white/15" />
-                  </div>
-                </div>
-              )}
-              {messages.length === 0 && !isLoading ? (
-                <EmptyState onSelect={handleSuggestion} />
-              ) : (
-                messages.map((message) => <MessageBubble key={message.id} message={message} />)
-              )}
-              {isLoading && <LoadingMessage />}
-              {error && <ErrorBanner message={error} />}
-              <div ref={endRef} />
-            </div>
-          </div>
-          {showScrollToLatest && (
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200">
+              {interactionsLabel}
+            </span>
             <button
               type="button"
-              onClick={handleScrollToLatest}
-              className="absolute bottom-[6.5rem] right-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/15 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-white/80 shadow-panel transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+              className="rounded-full bg-linear-to-r from-indigo-500 via-sky-500 to-teal-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:shadow-xl"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-secondary animate-pulse-soft" />
-              Back to latest
+              New conversation
             </button>
-          )}
-          <div className="border-t border-white/10 bg-surface/80 p-4 sm:p-6">
-            <ChatInput onSubmit={sendMessage} disabled={isLoading} isLoading={isLoading} />
           </div>
-        </section>
+        </header>
+
+        <div className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <section className="flex flex-col gap-6">
+            <div className="flex h-full flex-col gap-6 rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Conversation timeline</h2>
+                  <p className="text-sm text-slate-400">{conversationStatus}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-semibold uppercase tracking-[0.3em]">
+                    Active tab
+                    <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-white">{activeTab}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-semibold uppercase tracking-[0.3em]">
+                    Auto scroll
+                    <span className="h-2 w-4 rounded-full bg-emerald-400" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="relative flex-1 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/65">
+                <div className="pointer-events-none absolute inset-x-8 top-0 h-32 bg-linear-to-b from-indigo-500/20 to-transparent blur-3xl" />
+                <div ref={scrollRef} className="scrollbar-thin flex h-112 flex-col gap-4 overflow-y-auto p-6">
+                  {messages.length === 0 && !isLoading && (
+                    <div className="flex flex-1 items-center justify-center text-center text-sm text-slate-400">
+                      <p>Nothing here yet. Try a quick prompt below or paste your context to get started.</p>
+                    </div>
+                  )}
+                  {messages.map((message) => {
+                    const isUser = message.role === 'user';
+                    return (
+                      <div key={message.id} className={`flex flex-col ${isUser ? 'items-end text-right' : 'items-start text-left'} gap-2`}>
+                        <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">{isUser ? 'You' : 'Assistant'}</span>
+                        <div
+                          className={`${bubbleBase} ${isUser
+                              ? 'ml-auto bg-linear-to-r from-indigo-500 via-sky-500 to-teal-400 text-white shadow-lg ring-1 ring-white/20 hover:-translate-y-0.5'
+                              : 'mr-auto border border-white/10 bg-slate-950/80 text-slate-100 backdrop-blur-xl hover:-translate-y-0.5'
+                            }`}
+                        >
+                          {message.content}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {isLoading && (
+                    <div className="flex flex-col items-start gap-2 text-left">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Assistant</span>
+                      <div className={`${bubbleBase} mr-auto border border-white/10 bg-slate-950/80 text-slate-300 backdrop-blur-xl`}>Assistant is composing…</div>
+                    </div>
+                  )}
+                  {error && <p className="text-center text-sm text-rose-300">{error}</p>}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Prompt shortcuts</h3>
+                <span className="text-xs text-slate-500">Tap to fill the composer</span>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                {quickActions.map((action) => (
+                  <button
+                    key={action}
+                    type="button"
+                    onClick={() => handleQuickAction(action)}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-indigo-400/40 hover:bg-indigo-500/25 hover:text-white"
+                  >
+                    {action}
+                  </button>
+                ))}
+              </div>
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:flex-row sm:items-end">
+                <div className="flex-1">
+                  <label htmlFor="composer" className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                    Message
+                  </label>
+                  <input
+                    id="composer"
+                    type="text"
+                    value={input}
+                    onChange={(event) => setInput(event.target.value)}
+                    placeholder="Share context, ask a question, or paste requirements"
+                    className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/40"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm text-slate-200 transition hover:border-indigo-400/40 hover:text-white"
+                  >
+                    Mic
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm text-slate-200 transition hover:border-indigo-400/40 hover:text-white"
+                  >
+                    File
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || isLoading}
+                    className="flex h-12 w-28 items-center justify-center rounded-full bg-linear-to-r from-indigo-500 via-sky-500 to-teal-400 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isLoading ? 'Sending…' : 'Send'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <aside className="flex flex-col gap-6">
+            <div className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Session snapshot</h3>
+              <div className="mt-4 grid grid-cols-3 gap-3 text-center text-sm text-slate-300">
+                {stats.map((item) => (
+                  <div key={item.label} className="rounded-2xl border border-white/5 bg-white/5 px-3 py-4">
+                    <p className="text-[10px] uppercase tracking-[0.35em] text-slate-400">{item.label}</p>
+                    <p className="mt-2 text-lg font-semibold text-white">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-slate-100">Recent prompts</h3>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLog(-1)}
+                  className="text-xs text-slate-400 transition hover:text-slate-200"
+                >
+                  Clear
+                </button>
+              </div>
+              <nav className="space-y-2">
+                {visibleLogs.map((log, index) => (
+                  <button
+                    key={`${log}-${index}`}
+                    type="button"
+                    onClick={() => setSelectedLog(index)}
+                    className={`w-full rounded-2xl border px-3 py-2 text-left text-[0.9rem] transition ${index === selectedLog
+                        ? 'border-indigo-400/50 bg-indigo-500/25 text-white shadow-lg'
+                        : 'border-white/5 bg-white/5 text-slate-300 hover:border-indigo-400/40 hover:bg-indigo-500/15 hover:text-white'
+                      }`}
+                  >
+                    {log}
+                  </button>
+                ))}
+              </nav>
+              <div className="mt-4 rounded-2xl border border-white/5 bg-white/5 p-4 text-sm text-slate-300">
+                <p className="font-semibold text-slate-200">Pinned preview</p>
+                <p className="mt-2 text-sm">
+                  {highlightedLog ?? 'Select a prompt above to pin it and reuse the context in the composer.'}
+                </p>
+                {highlightedLog && (
+                  <button
+                    type="button"
+                    onClick={() => handleQuickAction(highlightedLog)}
+                    className="mt-3 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-indigo-500 via-sky-500 to-teal-400 px-4 py-2 text-xs font-semibold text-white transition hover:scale-[1.02] hover:shadow-lg"
+                  >
+                    Load into composer
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-100">Assistant output</h3>
+                  <p className="text-xs text-slate-400">Latest reply preview</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setActiveTab(tab)}
+                      className={`rounded-md px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] transition ${activeTab === tab ? 'bg-white text-slate-900' : 'text-slate-300 hover:bg-white/10'
+                        }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 font-mono text-xs text-slate-200">
+                <pre className="h-64 overflow-y-auto whitespace-pre-wrap leading-6">{assistantPreview}</pre>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-200">
+                <button type="button" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 transition hover:border-indigo-400/40 hover:bg-indigo-500/20 hover:text-white">Copy</button>
+                <button type="button" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 transition hover:border-indigo-400/40 hover:bg-indigo-500/20 hover:text-white">Run code</button>
+                <button type="button" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 transition hover:border-indigo-400/40 hover:bg-indigo-500/20 hover:text-white">Download .py</button>
+                <button type="button" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 transition hover:border-indigo-400/40 hover:bg-indigo-500/20 hover:text-white">Improve</button>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/65 p-6 backdrop-blur-2xl">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Knowledge packs</h3>
+              <div className="mt-3 space-y-3 text-xs text-slate-300">
+                {knowledgeCards.map((card) => (
+                  <div key={card.title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                    <p className="text-sm font-semibold text-white">{card.title}</p>
+                    <p className="mt-1 text-[13px] text-slate-300">{card.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
       </main>
     </div>
   );
