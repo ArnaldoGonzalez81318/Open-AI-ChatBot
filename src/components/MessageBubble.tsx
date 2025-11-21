@@ -17,7 +17,7 @@ const formatTime = (value: string) => {
 };
 
 const AssistantGlyph = () => (
-  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] text-white/80 shadow-glow backdrop-blur-sm ring-1 ring-white/10 transition-transform duration-300 hover:scale-110">
+  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 text-white/80 shadow-glow backdrop-blur-sm ring-1 ring-white/10 transition-transform duration-300 hover:scale-110">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -106,7 +106,7 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             type="button"
             aria-label="Copy message"
             onClick={handleCopy}
-            className={`absolute ${isUser ? '-left-5' : '-right-5'} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] p-2.5 text-white/70 shadow-glow backdrop-blur-sm transition-all duration-300 group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:scale-110 hover:border-white/25 hover:bg-white/20 hover:text-white hover:shadow-glow-strong`}
+            className={`absolute ${isUser ? '-left-5' : '-right-5'} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 p-2.5 text-white/70 shadow-glow backdrop-blur-sm transition-all duration-300 group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:scale-110 hover:border-white/25 hover:bg-white/20 hover:text-white hover:shadow-glow-strong`}
           >
             {copied ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -134,7 +134,7 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             )}
           </button>
           {copied && (
-            <span className={`absolute ${isUser ? 'right-6' : 'left-6'} -top-3 animate-slide-up-fade rounded-full border border-white/15 bg-linear-to-br from-white/[0.15] to-white/[0.08] px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/80 shadow-glow backdrop-blur-sm`}>Copied</span>
+            <span className={`absolute ${isUser ? 'right-6' : 'left-6'} -top-3 animate-slide-up-fade rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/80 shadow-glow backdrop-blur-sm`}>Copied</span>
           )}
         </div>
       </div>
