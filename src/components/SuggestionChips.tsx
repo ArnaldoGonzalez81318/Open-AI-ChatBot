@@ -4,7 +4,11 @@ type SuggestionChipsProps = {
   disabled?: boolean;
 };
 
-export const SuggestionChips = ({ suggestions, onSelect, disabled = false }: SuggestionChipsProps) => {
+export const SuggestionChips = ({
+  suggestions,
+  onSelect,
+  disabled = false,
+}: SuggestionChipsProps) => {
   if (!suggestions.length) {
     return null;
   }
@@ -23,9 +27,11 @@ export const SuggestionChips = ({ suggestions, onSelect, disabled = false }: Sug
             <span className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(88,166,255,0.3),transparent_70%)]" />
           </span>
           <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 text-xs font-semibold uppercase tracking-[0.24em] text-white/65 shadow-panel backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:border-accent-secondary/50 group-hover:bg-linear-to-br group-hover:from-accent-secondary/30 group-hover:to-accent-secondary/20 group-hover:text-white group-hover:shadow-glow">
-            {`${index + 1}`.padStart(2, '0')}
+            {`${index + 1}`.padStart(2, "0")}
           </span>
-          <span className="relative z-10 text-left leading-snug">{suggestion}</span>
+          <span className="relative z-10 text-left leading-snug">
+            {suggestion}
+          </span>
         </button>
       ))}
     </div>
