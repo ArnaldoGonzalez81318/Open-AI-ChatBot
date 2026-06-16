@@ -5,6 +5,6 @@
 
 export default function DeprecatedMain() {
   throw new Error(
-    'Main.jsx has been deprecated. Please use the Vite + TypeScript entrypoint located at src/App.tsx.'
+    "Main.jsx has been deprecated. Please use the Vite + TypeScript entrypoint located at src/App.tsx.",
   );
 }
