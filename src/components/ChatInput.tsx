@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { FormEvent, KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent, KeyboardEvent } from "react";
 
 type ChatInputProps = {
   onSubmit: (value: string) => Promise<void> | void;
@@ -7,8 +7,12 @@ type ChatInputProps = {
   isLoading?: boolean;
 };
 
-export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: ChatInputProps) => {
-  const [value, setValue] = useState('');
+export const ChatInput = ({
+  onSubmit,
+  disabled = false,
+  isLoading = false,
+}: ChatInputProps) => {
+  const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = useCallback(
@@ -18,10 +22,10 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
       if (!trimmed || disabled) {
         return;
       }
-      setValue('');
+      setValue("");
       await onSubmit(trimmed);
     },
-    [disabled, onSubmit, value]
+    [disabled, onSubmit, value],
   );
 
   useEffect(() => {
@@ -29,23 +33,26 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
     if (!element) {
       return;
     }
-    element.style.height = 'auto';
+    element.style.height = "auto";
     element.style.height = `${element.scrollHeight}px`;
   }, [value]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
+      if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         void handleSubmit();
       }
     },
-    [handleSubmit]
+    [handleSubmit],
   );
 
   const hintText = useMemo(
-    () => (isLoading ? 'Generating response…' : 'Press Enter • Shift+Enter for newline'),
-    [isLoading]
+    () =>
+      isLoading
+        ? "Generating response…"
+        : "Press Enter • Shift+Enter for newline",
+    [isLoading],
   );
 
   const showHint = value.trim().length === 0;
@@ -73,10 +80,10 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
       />
       <div className="absolute bottom-5 right-5 flex items-center gap-3">
         <span
-          className={`flex items-center gap-2 rounded-full border border-white/15 bg-linear-to-br from-white/10 to-white/5 px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel backdrop-blur-sm transition-all duration-300 ${showHint ? 'opacity-100' : 'opacity-0 group-focus-within:opacity-100'}`}
+          className={`flex items-center gap-2 rounded-full border border-white/15 bg-linear-to-br from-white/10 to-white/5 px-3 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.32em] text-white/50 shadow-panel backdrop-blur-sm transition-all duration-300 ${showHint ? "opacity-100" : "opacity-0 group-focus-within:opacity-100"}`}
         >
           {isLoading ? <LoadingDots /> : <HintIcon />}
-          {isLoading ? 'Working' : 'Press Enter'}
+          {isLoading ? "Working" : "Press Enter"}
         </span>
         <button
           type="submit"
@@ -96,14 +103,36 @@ export const ChatInput = ({ onSubmit, disabled = false, isLoading = false }: Cha
 };
 
 const HintIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3 w-3">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10h10m0 0-3-3m3 3-3 3" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    className="h-3 w-3"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5 10h10m0 0-3-3m3 3-3 3"
+    />
   </svg>
 );
 
 const SendIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-5 w-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="m5 12 13-7-4.5 7 4.5 7-13-7zm0 0h7" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    className="h-5 w-5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m5 12 13-7-4.5 7 4.5 7-13-7zm0 0h7"
+    />
   </svg>
 );
 
