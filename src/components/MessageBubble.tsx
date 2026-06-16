@@ -1,5 +1,5 @@
-import { memo, useMemo, useState } from 'react';
-import type { ChatMessage } from '../types/chat';
+import { memo, useMemo, useState } from "react";
+import type { ChatMessage } from "../types/chat";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -8,11 +8,11 @@ type MessageBubbleProps = {
 const formatTime = (value: string) => {
   try {
     return new Intl.DateTimeFormat(undefined, {
-      hour: 'numeric',
-      minute: 'numeric'
+      hour: "numeric",
+      minute: "numeric",
     }).format(new Date(value));
   } catch (error) {
-    return '';
+    return "";
   }
 };
 
@@ -56,16 +56,19 @@ const UserGlyph = () => (
 
 const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
   const [copied, setCopied] = useState(false);
-  const isUser = message.role === 'user';
+  const isUser = message.role === "user";
 
-  const timestamp = useMemo(() => formatTime(message.createdAt), [message.createdAt]);
+  const timestamp = useMemo(
+    () => formatTime(message.createdAt),
+    [message.createdAt],
+  );
 
-  const wrapperClass = isUser ? 'justify-end pl-16' : 'justify-start pr-16';
-  const alignment = isUser ? 'items-end text-right' : 'items-start text-left';
+  const wrapperClass = isUser ? "justify-end pl-16" : "justify-start pr-16";
+  const alignment = isUser ? "items-end text-right" : "items-start text-left";
 
   const bubbleClass = isUser
-    ? 'bg-linear-to-br from-accent-primary via-accent-primary to-accent-secondary text-slate-50 shadow-glow-strong border border-accent-primary/30'
-    : 'bg-linear-to-br from-surface-elevated to-surface-elevated-hover text-slate-100 ring-1 ring-white/15 backdrop-blur-2xl border border-white/10';
+    ? "bg-linear-to-br from-accent-primary via-accent-primary to-accent-secondary text-slate-50 shadow-glow-strong border border-accent-primary/30"
+    : "bg-linear-to-br from-surface-elevated to-surface-elevated-hover text-slate-100 ring-1 ring-white/15 backdrop-blur-2xl border border-white/10";
 
   const handleCopy = async () => {
     if (!navigator?.clipboard?.writeText) {
@@ -82,12 +85,17 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
 
   return (
     <div className={`flex w-full ${wrapperClass}`}>
-      <div className={`flex max-w-[min(90%,38rem)] flex-col gap-2 ${alignment} animate-slide-up-fade`}>
+      <div
+        className={`flex max-w-[min(90%,38rem)] flex-col gap-2 ${alignment} animate-slide-up-fade`}
+      >
         <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
           {isUser ? <UserGlyph /> : <AssistantGlyph />}
-          <span>{isUser ? 'You' : 'Assistant'}</span>
+          <span>{isUser ? "You" : "Assistant"}</span>
           {timestamp && (
-            <time className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-white/35" dateTime={message.createdAt}>
+            <time
+              className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-white/35"
+              dateTime={message.createdAt}
+            >
               {timestamp}
             </time>
           )}
@@ -106,10 +114,15 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             type="button"
             aria-label="Copy message"
             onClick={handleCopy}
-            className={`absolute ${isUser ? '-left-5' : '-right-5'} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 p-2.5 text-white/70 shadow-glow backdrop-blur-sm transition-all duration-300 group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:scale-110 hover:border-white/25 hover:bg-white/20 hover:text-white hover:shadow-glow-strong`}
+            className={`absolute ${isUser ? "-left-5" : "-right-5"} top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 p-2.5 text-white/70 shadow-glow backdrop-blur-sm transition-all duration-300 group-hover:flex group-hover:-translate-y-1/2 group-hover:items-center group-hover:justify-center hover:scale-110 hover:border-white/25 hover:bg-white/20 hover:text-white hover:shadow-glow-strong`}
           >
             {copied ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-4 w-4"
+              >
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 0 0-1.414 0L8.5 12.086l-2.793-2.793a1 1 0 0 0-1.414 1.414l3.5 3.5a1 1 0 0 0 1.414 0l7-7a1 1 0 0 0 0-1.414Z"
@@ -134,7 +147,11 @@ const MessageBubbleComponent = ({ message }: MessageBubbleProps) => {
             )}
           </button>
           {copied && (
-            <span className={`absolute ${isUser ? 'right-6' : 'left-6'} -top-3 animate-slide-up-fade rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/80 shadow-glow backdrop-blur-sm`}>Copied</span>
+            <span
+              className={`absolute ${isUser ? "right-6" : "left-6"} -top-3 animate-slide-up-fade rounded-full border border-white/15 bg-linear-to-br from-white/15 to-white/8 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/80 shadow-glow backdrop-blur-sm`}
+            >
+              Copied
+            </span>
           )}
         </div>
       </div>
